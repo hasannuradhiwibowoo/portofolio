@@ -9,6 +9,11 @@
     --primary: #6ea8fe;
 
     --border: #343a43;
+
+    --container-width: 1200px;
+    --radius: 14px;
+    --shadow-dark: rgba(0, 0, 0, 0.35);
+    --transition: 0.25s ease;
 }
 * {
     box-sizing: border-box;
