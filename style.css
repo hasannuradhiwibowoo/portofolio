@@ -1,26 +1,29 @@
 :root {
     --background: #1e2228;
     --card: #272c33;
-
     --white: #f5f7fa;
     --text: #e5e7eb;
     --text-secondary: #a7afba;
-
     --primary: #6ea8fe;
-
     --border: #343a43;
-
     --container-width: 1200px;
     --radius: 14px;
     --transition: 0.25s ease;
+}
+
+html.light {
+    --background: #f8fafc;
+    --card: #ffffff;
+    --white: #0f172a;
+    --text: #1e293b;
+    --text-secondary: #64748b;
+    --primary: #2563eb;
+    --border: #e2e8f0;
 }
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-}
-html {
-    scroll-behavior: smooth;
 }
 body {
     font-family:
@@ -109,6 +112,128 @@ h3 {
 .navbar li a:active {
     background: #343a43;
 }
+
+.hamburger {
+    display: none;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    position: relative;
+    z-index: 1001;
+    transition: background var(--transition);
+}
+
+.hamburger:hover {
+    background: #303640;
+}
+
+.hamburger-line {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--white);
+    border-radius: 2px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    transition: transform var(--transition), opacity var(--transition), background var(--transition);
+}
+
+.hamburger-line:nth-child(1) { transform: translate(-50%, -50%) translateY(-7px); }
+.hamburger-line:nth-child(3) { transform: translate(-50%, -50%) translateY(7px); }
+
+.hamburger-line.open:nth-child(1) { transform: translate(-50%, -50%) rotate(45deg); background: var(--primary); }
+.hamburger-line.open:nth-child(2) { opacity: 0; }
+.hamburger-line.open:nth-child(3) { transform: translate(-50%, -50%) rotate(-45deg); background: var(--primary); }
+
+.theme-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    color: var(--text);
+    transition: background var(--transition), border-color var(--transition), color var(--transition);
+}
+
+.theme-toggle:hover {
+    background: #303640;
+    border-color: #46505e;
+    color: var(--primary);
+}
+
+.theme-toggle .icon-sun { display: none; }
+.theme-toggle .icon-moon { display: block; }
+
+html.light .theme-toggle .icon-sun { display: block; }
+html.light .theme-toggle .icon-moon { display: none; }
+
+.nav-link.active {
+    color: var(--primary) !important;
+    background: #303640;
+}
+
+html.light .nav-link.active {
+    background: #e2e8f0;
+}
+
+@media (max-width: 900px) {
+    .hamburger { display: block; }
+    
+    .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 100%;
+        max-width: 320px;
+        height: 100vh;
+        background: var(--card);
+        border-left: 1px solid var(--border);
+        flex-direction: column;
+        align-items: stretch;
+        padding: 100px 20px 30px;
+        gap: 8px;
+        transition: right var(--transition);
+        z-index: 1000;
+        box-shadow: -4px 0 20px rgba(0,0,0,0.15);
+    }
+    
+    .nav-links.open { right: 0; }
+    
+    .nav-links li { width: 100%; }
+    
+    .nav-links .nav-link {
+        display: block;
+        width: 100%;
+        padding: 14px 20px;
+        border-radius: 10px;
+        font-size: 1rem;
+        text-align: left;
+    }
+    
+    .nav-links .nav-link:hover {
+        background: #303640;
+        color: var(--white);
+    }
+    
+    html.light .nav-links .nav-link:hover {
+        background: #e2e8f0;
+        color: var(--primary);
+    }
+    
+    body.menu-open { overflow: hidden; }
+}
+
 #hero {
     min-height: calc(100vh - 100px);
 
@@ -461,35 +586,6 @@ h3 {
     border-color: #46505e;
 
     transform: translateY(-3px);
-}
-@media (max-width: 900px) {
-
-    .navbar {
-        flex-direction: column;
-
-        gap: 15px;
-    }
-
-    .navbar ul {
-        flex-wrap: wrap;
-
-        justify-content: center;
-    }
-
-    #about {
-        grid-template-columns: 1fr;
-
-        gap: 50px;
-    }
-
-    #about > div:first-child {
-        padding: 30px;
-    }
-
-    .about-photo {
-        width: 230px;
-        height: 230px;
-    }
 }
 @media (max-width: 600px) {
 

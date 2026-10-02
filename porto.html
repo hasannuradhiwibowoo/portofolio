@@ -3,20 +3,33 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title> Hasan NAW Portofolio Digital</title>
+        <title>Hasan NAW Portofolio Digital</title>
         <link rel="stylesheet" href="style.css">
+        <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
     </head>
     <body>
-        <nav class="navbar">
+        <nav class="navbar" x-data="navbar()" x-init="init()">
             <div class="logo">Hansss.NAW</div>
-            <ul>
-                <li><a href="#hero">Beranda</a></li>
-                <li><a href="#about">Tentang</a></li>
-                <li><a href="#skill">Kemampuan</a></li>
-                <li><a href="#sertifikat">Sertifikat</a></li>
-                <li><a href="#project">Projek</a></li>
-                <li><a href="#contact">Kontak Saya</a></li>
+            
+            <button class="hamburger" @click="toggleMenu()" aria-label="Toggle menu" aria-expanded="false" :aria-expanded="isOpen">
+                <span class="hamburger-line" :class="{ 'open': isOpen }"></span>
+                <span class="hamburger-line" :class="{ 'open': isOpen }"></span>
+                <span class="hamburger-line" :class="{ 'open': isOpen }"></span>
+            </button>
+
+            <ul class="nav-links" :class="{ 'open': isOpen }">
+                <li><a href="#hero" class="nav-link" @click="closeMenu()">Beranda</a></li>
+                <li><a href="#about" class="nav-link" @click="closeMenu()">Tentang</a></li>
+                <li><a href="#skill" class="nav-link" @click="closeMenu()">Kemampuan</a></li>
+                <li><a href="#sertifikat" class="nav-link" @click="closeMenu()">Sertifikat</a></li>
+                <li><a href="#project" class="nav-link" @click="closeMenu()">Projek</a></li>
+                <li><a href="#contact" class="nav-link" @click="closeMenu()">Kontak Saya</a></li>
             </ul>
+
+            <button class="theme-toggle" @click="toggleTheme()" :aria-label="isDark ? 'Switch to light mode' : 'Switch to dark mode'" aria-pressed="false" :aria-pressed="isDark">
+                <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+            </button>
         </nav>
         <section id="hero">
             <h1>Haii, saya Hasan Nur Adhi Wibowo</h1>
@@ -141,5 +154,83 @@
             <a href="https://www.instagram.com/hansss.naw?utm_source=ig_web_button_share_sheet&stkn=ZDNlZDc0MzIxNw==">Instagram Saya</a>
             <a href="https://www.linkedin.com/in/hasan-nur-adhi-wibowo-46b8a9407/?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3BO%2FEMf%2FVrRWiTEflsjwH3aA%3D%3D" target="_blank" rel="noopener noreferrer">LinkedIn Saya</a>
         </section>
+
+        <script>
+            document.addEventListener('alpine:init', () => {
+                Alpine.data('navbar', () => ({
+                    isOpen: false,
+                    isDark: true,
+                    
+                    init() {
+                        const savedTheme = localStorage.getItem('theme');
+                        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                        this.isDark = savedTheme ? savedTheme === 'dark' : prefersDark;
+                        this.applyTheme();
+                        this.setupSmoothScroll();
+                        this.setupActiveNavHighlight();
+                    },
+                    
+                    toggleMenu() {
+                        this.isOpen = !this.isOpen;
+                        document.body.classList.toggle('menu-open', this.isOpen);
+                    },
+                    
+                    closeMenu() {
+                        this.isOpen = false;
+                        document.body.classList.remove('menu-open');
+                    },
+                    
+                    toggleTheme() {
+                        this.isDark = !this.isDark;
+                        localStorage.setItem('theme', this.isDark ? 'dark' : 'light');
+                        this.applyTheme();
+                    },
+                    
+                    applyTheme() {
+                        document.documentElement.classList.toggle('light', !this.isDark);
+                    },
+                    
+                    setupSmoothScroll() {
+                        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                            anchor.addEventListener('click', (e) => {
+                                const targetId = anchor.getAttribute('href');
+                                if (targetId === '#') return;
+                                
+                                const target = document.querySelector(targetId);
+                                if (target) {
+                                    e.preventDefault();
+                                    const navbarHeight = document.querySelector('.navbar').offsetHeight;
+                                    const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
+                                    
+                                    window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+                                }
+                            });
+                        });
+                    },
+                    
+                    setupActiveNavHighlight() {
+                        const sections = document.querySelectorAll('section[id]');
+                        const navLinks = document.querySelectorAll('.nav-link');
+                        const navbar = document.querySelector('.navbar');
+                        
+                        const observer = new IntersectionObserver((entries) => {
+                            entries.forEach(entry => {
+                                if (entry.isIntersecting) {
+                                    const id = entry.target.getAttribute('id');
+                                    navLinks.forEach(link => {
+                                        link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
+                                    });
+                                }
+                            });
+                        }, {
+                            rootMargin: `-${navbar?.offsetHeight || 80}px 0px -60% 0px`,
+                            threshold: 0.1
+                        });
+                        
+                        sections.forEach(section => observer.observe(section));
+                    }
+                }));
+            });
+        </script>
     </body>
 </html>
